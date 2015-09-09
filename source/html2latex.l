@@ -74,55 +74,53 @@ int list_type;
 
 <UL>"<li>" {
   printf("\\item");
-  BEGIN LI;
 }
 
-<UL,LI>"</li>" {
+<UL>"</li>" {
   printf("\n");
-  BEGIN UL;
 }
 
-<UL,LI>"<small>"[^<]*"</small>" {
+<UL>"<small>"[^<]*"</small>" {
    yytext[yyleng-8] = 0;
    printf("{\\scriptsize %s}", yytext+7);
 }
 
-<UL,LI>"<big>"[^<]*"</big>" {
+<UL>"<big>"[^<]*"</big>" {
   yytext[yyleng-6] = 0;
   printf("{\\Large %s}", yytext + 5);
 }
 
-<UL,LI>"<b>"[^<]*"</b>" {
+<UL>"<b>"[^<]*"</b>" {
   yytext[yyleng-4] = 0;
   printf("\\textbf{%s}", yytext+3);
 }
 
-<UL,LI>"<i>"[^<]*"</i>" {
+<UL>"<i>"[^<]*"</i>" {
   yytext[yyleng-4] = 0;
   printf("\\textit{%s}", yytext+3);
 }
 
-<UL,LI>"<strong>"[^<]*"</strong>" {
+<UL>"<strong>"[^<]*"</strong>" {
   yytext[yyleng-9] = 0;
   printf("\\textmd{%s}", yytext+8);
 }
 
-<UL,LI>"<em>"[^<]*"</em>" {
+<UL>"<em>"[^<]*"</em>" {
   yytext[yyleng-5] = 0;
   printf("\\emph{%s}", yytext+4);
 }
 
-<UL,LI>"<sup>"[^<]*"</sup>" {
+<UL>"<sup>"[^<]*"</sup>" {
   yytext[yyleng-5] = 0;
   printf("\\textsuperscript{%s}", yytext+4);
 }
 
-<UL,LI>"<sub>"[^<]*"</sub>" {
+<UL>"<sub>"[^<]*"</sub>" {
   yytext[yyleng-5] = 0;
   printf("\\textsubscript{%s}", yytext+4);
 }
 
-<UL,LI>[ \t] {
+<UL>[ \t] {
   /***************************************************************************
    * Matched some white space while parsing an HTML paragraph. Print out the 
    * white space as is.
@@ -130,7 +128,7 @@ int list_type;
   printf("%s", yytext);
 }
 
-<UL,LI>. {
+<UL>. {
   /**************************************************************************
    * Matched any other text while parsing an HTML paragraph. Print out the 
    * text as is.
