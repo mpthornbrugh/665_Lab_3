@@ -94,12 +94,12 @@ int list_type;
 
 <UL,LI>"<b>"[^<]*"</b>" {
   yytext[yyleng-4] = 0;
-  printf("//textbf{%s}", yytext+3);
+  printf("\\textbf{%s}", yytext+3);
 }
 
 <UL,LI>"<i>"[^<]*"</i>" {
   yytext[yyleng-4] = 0;
-  printf("//textit{%s}", yytext+3);
+  printf("\\textit{%s}", yytext+3);
 }
 
 <UL,LI>"<strong>"[^<]*"</strong>" {
@@ -189,12 +189,12 @@ int list_type;
 
 <PARA>"<b>"[^<]*"</b>" {
   yytext[yyleng-4] = 0;
-  printf("//textbf{%s}", yytext+3);
+  printf("\\textbf{%s}", yytext+3);
 }
 
 <PARA>"<i>"[^<]*"</i>" {
   yytext[yyleng-4] = 0;
-  printf("//textit{%s}", yytext+3);
+  printf("\\textit{%s}", yytext+3);
 }
 
 <PARA>"<strong>"[^<]*"</strong>" {
