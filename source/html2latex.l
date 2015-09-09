@@ -58,6 +58,86 @@ int list_type;
    BEGIN PARA;
 }
 
+"<ul>" {
+  printf("\\being{itemize}");
+  BEGIN UL;
+}
+
+<UL>"</ul>" {
+  printf("\\end{itemize}");
+  BEGIN 0;
+}
+
+<UL>[ \t] {
+  printf("%s", yytext);
+}
+
+<UL>"<li>" {
+  printf("\\item");
+  BEGIN LI;
+}
+
+<UL,LI>"</li>" {
+  printf("\n");
+  BEGIN UL;
+}
+
+<UL,LI>"<small>"[^<]*"</small>" {
+   yytext[yyleng-8] = 0;
+   printf("{\\scriptsize %s}", yytext+7);
+}
+
+<UL,LI>"<big>"[^<]*"</big>" {
+  yytext[yyleng-6] = 0;
+  printf("{\\Large %s}", yytext + 5);
+}
+
+<UL,LI>"<b>"[^<]*"</b>" {
+  yytext[yyleng-4] = 0;
+  printf("//textbf{%s}", yytext+3);
+}
+
+<UL,LI>"<i>"[^<]*"</i>" {
+  yytext[yyleng-4] = 0;
+  printf("//textit{%s}", yytext+3);
+}
+
+<UL,LI>"<strong>"[^<]*"</strong>" {
+  yytext[yyleng-9] = 0;
+  printf("\\textmd{%s}", yytext+8);
+}
+
+<UL,LI>"<em>"[^<]*"</em>" {
+  yytext[yyleng-5] = 0;
+  printf("\\emph{%s}", yytext+4);
+}
+
+<UL,LI>"<sup>"[^<]*"</sup>" {
+  yytext[yyleng-5] = 0;
+  printf("\\textsuperscript{%s}", yytext+4);
+}
+
+<UL,LI>"<sub>"[^<]*"</sub>" {
+  yytext[yyleng-5] = 0;
+  printf("\\textsubscript{%s}", yytext+4);
+}
+
+<UL,LI>[ \t] {
+  /***************************************************************************
+   * Matched some white space while parsing an HTML paragraph. Print out the 
+   * white space as is.
+   ***************************************************************************/
+  printf("%s", yytext);
+}
+
+<UL,LI>. {
+  /**************************************************************************
+   * Matched any other text while parsing an HTML paragraph. Print out the 
+   * text as is.
+   ***************************************************************************/
+  printf("%s", yytext);
+}
+
 "<!--" {
     /**************************************************************************
      * Matched an HTML comment so print it out as a LateX comment. The
