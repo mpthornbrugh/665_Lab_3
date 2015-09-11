@@ -79,7 +79,7 @@ int list_type;
 
 <UL,LI>"</li>" {
   printf("\n");
-  BEGIN UL;
+  BEGIN 0;
 }
 
 <UL,LI>"<small>"[^<]*"</small>" {
