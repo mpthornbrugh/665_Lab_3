@@ -83,10 +83,6 @@ int list_type;
 
 <UL>"</li>" {
   printf("\n");
-<<<<<<< HEAD
-  BEGIN 0;
-=======
->>>>>>> e32c18856a2dbaf180440ac1d243cca465482781
 }
 
 <UL>"<small>"[^<]*"</small>" {
