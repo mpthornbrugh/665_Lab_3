@@ -18,7 +18,7 @@ int list_type;
      * title can be formatted in LateX.
      *************************************************************************/
     yytext[yyleng-5] = 0;
-    printf( "\\section{%s}", yytext+4 );
+    printf( "\\section{%s}\n", yytext+4 );
 }
 
 "<h2>"[^<]*"</h2>" {
@@ -28,7 +28,7 @@ int list_type;
    * can be formatted in LateX.
    ***************************************************************************/
   yytext[yyleng-5] = 0;
-  printf("\\subsection{%s}", yytext+4);
+  printf("\\subsection{%s}\n", yytext+4);
 }
 
 "<h3>"[^<]*"</h3>" {
@@ -38,7 +38,7 @@ int list_type;
    * can be formatted in LateX.
    **************************************************************************/
   yytext[yyleng-5] = 0;
-  printf("\\subsubsection{%s}", yytext+4);
+  printf("\\subsubsection{%s}\n", yytext+4);
 }
 
 "<pre>"[^<]*"</pre>" {
@@ -46,7 +46,7 @@ int list_type;
    * Matched an HTML pre header so print it out verbatim
    * ************************************************************************/
   yytext[yyleng-6] = 0;
-  printf("\\begin{verbatim}%s\\end{verbatim}", yytext+5);
+  printf("\\begin{verbatim}%s\\end{verbatim}\n", yytext+5);
 }
 
 "<p>" {
@@ -59,12 +59,17 @@ int list_type;
 }
 
 "<ul>" {
-  printf("\\being{itemize}");
+  printf("\\begin{itemize}");
   BEGIN UL;
 }
 
+"<ol>" {
+  printf("\\begin{enumerate}");
+  BEGIN OL;
+}
+
 <UL>"</ul>" {
-  printf("\\end{itemize}");
+  printf("\\end{itemize}\n");
   BEGIN 0;
 }
 
@@ -74,65 +79,140 @@ int list_type;
 
 <UL>"<li>" {
   printf("\\item");
-  BEGIN LI;
 }
 
-<UL,LI>"</li>" {
+<UL>"</li>" {
   printf("\n");
+<<<<<<< HEAD
   BEGIN 0;
+=======
+>>>>>>> e32c18856a2dbaf180440ac1d243cca465482781
 }
 
-<UL,LI>"<small>"[^<]*"</small>" {
+<UL>"<small>"[^<]*"</small>" {
    yytext[yyleng-8] = 0;
    printf("{\\scriptsize %s}", yytext+7);
 }
 
-<UL,LI>"<big>"[^<]*"</big>" {
+<UL>"<big>"[^<]*"</big>" {
   yytext[yyleng-6] = 0;
   printf("{\\Large %s}", yytext + 5);
 }
 
-<UL,LI>"<b>"[^<]*"</b>" {
+<UL>"<b>"[^<]*"</b>" {
   yytext[yyleng-4] = 0;
-  printf("//textbf{%s}", yytext+3);
+  printf("\\textbf{%s}", yytext+3);
 }
 
-<UL,LI>"<i>"[^<]*"</i>" {
+<UL>"<i>"[^<]*"</i>" {
   yytext[yyleng-4] = 0;
-  printf("//textit{%s}", yytext+3);
+  printf("\\textit{%s}", yytext+3);
 }
 
-<UL,LI>"<strong>"[^<]*"</strong>" {
+<UL>"<strong>"[^<]*"</strong>" {
   yytext[yyleng-9] = 0;
   printf("\\textmd{%s}", yytext+8);
 }
 
-<UL,LI>"<em>"[^<]*"</em>" {
+<UL>"<em>"[^<]*"</em>" {
   yytext[yyleng-5] = 0;
   printf("\\emph{%s}", yytext+4);
 }
 
-<UL,LI>"<sup>"[^<]*"</sup>" {
-  yytext[yyleng-5] = 0;
-  printf("\\textsuperscript{%s}", yytext+4);
+<UL>"<sup>"[^<]*"</sup>" {
+  yytext[yyleng-6] = 0;
+  printf("\\textsuperscript{%s}", yytext+5);
 }
 
-<UL,LI>"<sub>"[^<]*"</sub>" {
-  yytext[yyleng-5] = 0;
-  printf("\\textsubscript{%s}", yytext+4);
+<UL>"<sub>"[^<]*"</sub>" {
+  yytext[yyleng-6] = 0;
+  printf("\\textsubscript{%s}", yytext+5);
 }
 
-<UL,LI>[ \t] {
+<UL>[ \t] {
   /***************************************************************************
-   * Matched some white space while parsing an HTML paragraph. Print out the 
+   * Matched some white space while parsing an HTML ul. Print out the 
    * white space as is.
    ***************************************************************************/
   printf("%s", yytext);
 }
 
-<UL,LI>. {
+<UL>. {
   /**************************************************************************
-   * Matched any other text while parsing an HTML paragraph. Print out the 
+   * Matched any other text while parsing an HTML ul. Print out the 
+   * text as is.
+   ***************************************************************************/
+  printf("%s", yytext);
+}
+
+<OL>"</ol>" {
+  printf("\\end{enumerate}\n");
+  BEGIN 0;
+}
+
+<OL>[ \t] {
+  printf("%s", yytext);
+}
+
+<OL>"<li>" {
+  printf("\\item");
+}
+
+<OL>"</li>" {
+  printf("\n");
+}
+
+<OL>"<small>"[^<]*"</small>" {
+   yytext[yyleng-8] = 0;
+   printf("{\\scriptsize %s}", yytext+7);
+}
+
+<OL>"<big>"[^<]*"</big>" {
+  yytext[yyleng-6] = 0;
+  printf("{\\Large %s}", yytext + 5);
+}
+
+<OL>"<b>"[^<]*"</b>" {
+  yytext[yyleng-4] = 0;
+  printf("\\textbf{%s}", yytext+3);
+}
+
+<OL>"<i>"[^<]*"</i>" {
+  yytext[yyleng-4] = 0;
+  printf("\\textit{%s}", yytext+3);
+}
+
+<OL>"<strong>"[^<]*"</strong>" {
+  yytext[yyleng-9] = 0;
+  printf("\\textmd{%s}", yytext+8);
+}
+
+<OL>"<em>"[^<]*"</em>" {
+  yytext[yyleng-5] = 0;
+  printf("\\emph{%s}", yytext+4);
+}
+
+<OL>"<sup>"[^<]*"</sup>" {
+  yytext[yyleng-6] = 0;
+  printf("\\textsuperscript{%s}", yytext+5);
+}
+
+<OL>"<sub>"[^<]*"</sub>" {
+  yytext[yyleng-6] = 0;
+  printf("\\textsubscript{%s}", yytext+5);
+}
+
+<OL>[ \t] {
+  /***************************************************************************
+   * Matched some white space while parsing an HTML ol. Print out the 
+   * white space as is.
+   ***************************************************************************/
+  printf("%s", yytext);
+}
+
+<OL>. {
+  /**************************************************************************
+   * Matched any other text while parsing an HTML ol. Print out the 
    * text as is.
    ***************************************************************************/
   printf("%s", yytext);
@@ -169,7 +249,7 @@ int list_type;
    * Matched an HTML end paragraph tag. Print out a new line
    * and continue normal parsing.
    ***************************************************************************/
-  printf("\n");
+  printf("\n\n");
   BEGIN 0;
 }
 
@@ -189,12 +269,12 @@ int list_type;
 
 <PARA>"<b>"[^<]*"</b>" {
   yytext[yyleng-4] = 0;
-  printf("//textbf{%s}", yytext+3);
+  printf("\\textbf{%s}", yytext+3);
 }
 
 <PARA>"<i>"[^<]*"</i>" {
   yytext[yyleng-4] = 0;
-  printf("//textit{%s}", yytext+3);
+  printf("\\textit{%s}", yytext+3);
 }
 
 <PARA>"<strong>"[^<]*"</strong>" {
